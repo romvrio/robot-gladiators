@@ -66,14 +66,22 @@ var fight = function (enemyName) {
             window.alert(playerName + " still has " + playerHealth + " health left.");
         }
     }
-
-    console.log(enemyNames.length);
-    for (var i = 0; i < enemyNames.length; i++) {
-        var pickedEnemyName = enemyNames[i];
-        enemyHealth = 50;
-        // call fight function with enemy-robot
-        fight(pickedEnemyName);
+}
+console.log(enemyNames.length);
+for (var i = 0; i < enemyNames.length; i++) {
+    if (playerHealth > 0) {
+        //let player know what round they are in, arrays atart t 0 so it needs 1 added to it
+        window.alert("welcome to Robot Gladiators! Round " + (i + 1));
     }
+    else {
+        window.alert("You have lost your robot in battle! Game Over!");
+        break;
+    }
+    // pick new enemy to fight based on the undex of enemyNames array
+    var pickedEnemyName = enemyNames[i];
+    // reset enemyHealth before starting new fight
+    enemyHealth = 50;
+    // call fight function with enemy-robot
+    fight(pickedEnemyName);
 
 }
-fight();
