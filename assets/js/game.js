@@ -4,6 +4,11 @@
 // * Defeat each enemy-robot
 // Lose - Players robot's Health is zero or less
 
+var randomNumber = function (min, max) {
+    var value = Math.floor(Math.random() * (max - min + 1) + min);
+
+    return value;
+};
 
 var fight = function (enemy) {
     // repeat and execute as as the enemy-robot is alive
@@ -60,7 +65,7 @@ var fight = function (enemy) {
             window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
         }
     }
-}
+};
 
 var startGame = function () {
     // reset player stats
@@ -149,15 +154,18 @@ var shop = function () {
     }
 };
 
-
-var randomNumber = function (min, max) {
-    var value = Math.floor(Math.random() * (max - min + 1) + min);
-
-    return value;
+var getPlayerName = function () {
+    var name = "";
+    while (name === "" || name === null) {
+        name = prompt("What is your robot's name?");
+    }
+    console.log("Your robot's name is " + name + ".");
+    return name;
 };
 
+//player info
 var playerInfo = {
-    name: window.prompt("What is your robot's name?"),
+    name: getPlayerName(),
     health: 100,
     attack: 10,
     money: 10,
@@ -189,6 +197,7 @@ var playerInfo = {
     }
 };
 
+//enemy info
 var enemyInfo = [
     {
         name: "DESTROYER",
@@ -203,6 +212,12 @@ var enemyInfo = [
         attack: randomNumber(10, 14)
     }
 ];
+
+console.log(enemyInfo);
+console.log(enemyInfo[0]);
+console.log(enemyInfo[0].name);
+console.log(enemyInfo[0]['attack']);
+
 startGame();
 
 
