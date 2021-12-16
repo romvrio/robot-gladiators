@@ -32,11 +32,12 @@ var fightOrSkip = function () {
             // subtract money from playerMoney for skipping
             playerInfo.playerMoney = playerInfo.money - 10;
 
+            //return true if payer wants to leave
             return true;
         }
     }
     return false;
-}
+};
 
 var fight = function (enemy) {
     //keep track of who goes first
@@ -47,47 +48,51 @@ var fight = function (enemy) {
 
     // repeat and execute as as the enemy-robot is alive
     while (playerInfo.health > 0 && enemy.health > 0) {
-        if (fightOrSkip()) {
-            break;
-        }
+        if (isPlayerTurn) {
+            if (fightOrSkip()) {
+                break;
+            }
 
-        // remove enemy's health by subtracting the amount set in the playerInfo.attack variable
-        var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
-        enemy.health = Math.max(0, enemy.health - damage);
+            // remove enemy's health by subtracting the amount set in the playerInfo.attack variable
+            var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
-        console.log(
-            playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + " now has " + enemy.health + " health remaining."
-        );
-        // check enemy's health
-        if (enemy.health <= 0) {
-            window.alert(enemy.name + " has died!");
+            enemy.health = Math.max(0, enemy.health - damage);
 
-            //award player money for winning
-            playerInfo.money = playerInfo.money + 20;
+            console.log(
+                playerInfo.name + " attacked " + enemy.name + ". " + enemy.name + " now has " + enemy.health + " health remaining."
+            );
+            // check enemy's health
+            if (enemy.health <= 0) {
+                window.alert(enemy.name + " has died!");
 
-            //leave while() loop since enemy is dead
-            break;
-        }
-        else {
-            window.alert(enemy.name + " still has " + enemy.health + " health left.");
-        }
-        // remove player's health by subtracting the amount set in the enemy.attack variable
-        var damage = randomNumber(enemy.attack - 3, enemy.attack);
-        playerInfo.health = Math.max(0, playerInfo.health - damage);
-        console.log(
-            enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + " now has " + playerInfo.health + " health remaining."
-        );
-        // check player's health
-        if (playerInfo.health <= 0) {
-            window.alert(playerInfo.name + " has died!");
+                //award player money for winning
+                playerInfo.money = playerInfo.money + 20;
 
-            //leave while() loop if player is dead
-            break;
+                //leave while() loop since enemy is dead
+                break;
+            }
+            else {
+                window.alert(enemy.name + " still has " + enemy.health + " health left.");
+            }
         } else {
-            window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+            var damage = randomNumber(enemy.attack - 3, enemy.attack);
+            // remove player's health by subtracting the amount set in the enemy.attack variable
 
+            playerInfo.health = Math.max(0, playerInfo.health - damage);
+            console.log(
+                enemy.name + " attacked " + playerInfo.name + ". " + playerInfo.name + " now has " + playerInfo.health + " health remaining."
+            );
+            // check player's health
+            if (playerInfo.health <= 0) {
+                window.alert(playerInfo.name + " has died!");
+
+                //leave while() loop if player is dead
+                break;
+            } else {
+                window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+
+            }
         }
-
         //Switch turn order for next round
         isPlayerTurn = !isPlayerTurn;
     }
@@ -130,14 +135,23 @@ var startGame = function () {
 var endGame = function () {
     window.alert("The gane is over, lets see how you did!")
 
-    // if player is still alive, player wins!
-    if (playerInfo.health >= 0) {
-        window.alert("Great job, you've survived the game! You now have a score of " + playerInfo.money + ".");
-    } else {
-        window.alert("The game has now ended. Let's see how you did!");
+    // check localStorage for high score, if it's not there, use 0
+    var highScore = localStorage.getItem("highscore");
+    if (highScore === null) {
+        highScore = 0;
+    }
+    // if player has more money than the high score, player has new high score!
+    if (playerInfo.money > highScore) {
+        localStorage.setItem("highscore", playerInfo.money);
+        localStorage.setItem("name", playerInfo.name);
+
+        alert(playerInfo.name + " now has the high score of " + playerInfo.money + "!");
+    }
+    else {
+        alert(playerInfo.name + " did not beat the high score of " + highScore + ". Maybe next time!");
     }
 
-    // ask player if theyd like to play again 
+    // ask player if they'd like to play again
     var playAgainConfirm = window.confirm("Would you like to play again?");
 
     if (playAgainConfirm) {
@@ -237,22 +251,11 @@ var enemyInfo = [
     }
 ];
 
-console.log(enemyInfo);
-console.log(enemyInfo[0]);
-console.log(enemyInfo[0].name);
-console.log(enemyInfo[0]['attack']);
-
 startGame();
 
 
 /* to do list:
-fight function will continue function even if player puts in wrong entry. 
-
 "Robot has died repeats twice in endgame" 
-
-round numbers will remain at 1 and not increase by 'i' 
-
-when player dies on different rounds the game will still ask if youd like to continue into next round.
 */
 
 
